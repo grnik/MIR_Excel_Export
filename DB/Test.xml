@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<tv>
+<channel id="MIR">
+<display-name lang="ru">МИР</display-name>
+</channel>
+<programme start="20130318060000" +0400" stop="20130318064959" +0400" channel="MIR"><title lang="ru">Огонь любви. 82 серия</title><date>20130318</date><rating system="RU"><value></value></rating><desc lang="ru">премьера (РФ) 7 января 2008 
+
+Главная героиня Светлана несправедливо обвинена в умышленном поджоге автомастерской, где во время пожара погиб ее отец. За это Света попадает в тюрьму и выходит из нее через три года. </desc></programme>
+</tv>
