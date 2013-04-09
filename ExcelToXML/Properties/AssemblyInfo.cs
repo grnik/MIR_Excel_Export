@@ -6,12 +6,12 @@ using System.Runtime.InteropServices;
 // набора атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
 [assembly: AssemblyTitle("ExcelToXML")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Преобразует описание программ из xls файла в xml")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("МИР")]
 [assembly: AssemblyProduct("ExcelToXML")]
-[assembly: AssemblyCopyright("Copyright ©  2013")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCopyright("Григорьев Николай ©  2013")]
+[assembly: AssemblyTrademark("gr_nik@mail.ru")]
 [assembly: AssemblyCulture("")]
 
 // Параметр ComVisible со значением FALSE делает типы в сборке невидимыми 

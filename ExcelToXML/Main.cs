@@ -59,32 +59,35 @@ namespace ExcelToXML
                 excelworksheet = (Excel.Worksheet)excelsheets.get_Item(1);
                 //Выделение группы ячеек
 
-                //excelcells = excelworksheet.get_Range("A1", Type.Missing);
-                //string sStr = Convert.ToString(excelcells.Value2);
-
                 this.CreateFile(txtXMLFile.Text);
                 int row = 1;
                 try
                 {
+                    DateTime date;
+                    DateTime start = new DateTime(0);
+                    DateTime stop = new DateTime(0);
 
-                    while (!String.IsNullOrEmpty(excelworksheet.Cells[row, 1].Value2.ToString()))
+                    while (excelworksheet.Cells[row, 1].Value2 != null)
                     {
-                        string A = excelworksheet.get_Range("A" + row.ToString(), Type.Missing).Value2.ToString();
-                        string B = excelworksheet.get_Range("B" + row.ToString(), Type.Missing).Value2.ToString();
-                        string C = excelworksheet.get_Range("C" + row.ToString(), Type.Missing).Value2.ToString();
-                        DateTime date = Convert.ToDateTime(A);
-                        DateTime start = date + DoubleToTimeSpan(Convert.ToDouble(B));
-                        DateTime stop = start + DoubleToTimeSpan(Convert.ToDouble(C));
+                        string A = ReadCell("A", row);
+                        string B = ReadCell("B", row);
+                        string C = ReadCell("C", row);
+                        date = Convert.ToDateTime(A);
+                        //Если время пусто, то берем время предыдущей строки.
+                        if (!String.IsNullOrEmpty(B))
+                            start = date + DoubleToTimeSpan(Convert.ToDouble(B));
+                        if (!String.IsNullOrEmpty(C))
+                            stop = start + DoubleToTimeSpan(Convert.ToDouble(C));
 
-                        string title = excelworksheet.Cells[row, 5].Value2.ToString();
+                        string title = ReadCell(5, row);
                         string rating = "";
-                        string desc = excelworksheet.Cells[row, 8].Value2.ToString();
-                        AddProgramm(start, stop, channel, title, date, rating, desc)
-                        ;
+                        string desc = ReadCell(8, row);
+
+                        AddProgramm(start, stop, channel, title, date, rating, desc);
 
                         row++;
                     }
-                    MessageBox.Show("Была обработано " + (row - 1).ToString() + " строк");
+                    MessageBox.Show("Было обработано " + (row - 1).ToString() + " строк");
                 }
                 catch (Exception exc)
                 {
@@ -111,6 +114,26 @@ namespace ExcelToXML
             {
                 excelapp.Quit();
             }
+        }
+
+        private string ReadCell(int col, int row)
+        {
+            string res = "";
+            excelcells = excelworksheet.Cells[row, col];
+            if (excelcells.Value2 != null)
+                res = excelworksheet.Cells[row, col].Value2.ToString();
+
+            return res;
+        }
+
+        private string ReadCell(string col, int row)
+        {
+            string res = "";
+            excelcells = excelworksheet.get_Range(col + row.ToString(), Type.Missing);
+            if (excelcells.Value2 != null)
+                res = excelcells.Value2.ToString();
+
+            return res;
         }
 
         private void btExcelChoose_Click(object sender, EventArgs e)
@@ -150,7 +173,7 @@ namespace ExcelToXML
         void AddProgramm(DateTime start, DateTime stop, string channel, string title, DateTime date, string rating, string desc)
         {
             StringBuilder programm = new StringBuilder();
-            programm.AppendFormat(@"<programme start=""{0}"" +0400"" stop=""{1}"" +0400"" channel=""{2}"">", start.ToString("yyyyMMddHHmmss"), stop.ToString("yyyyMMddHHmmss"), channel);
+            programm.AppendFormat(@"<programme start=""{0} +0400"" stop=""{1} +0400"" channel=""{2}"">", start.ToString("yyyyMMddHHmmss"), stop.ToString("yyyyMMddHHmmss"), channel);
             programm.AppendFormat(@"<title lang=""ru"">{0}</title>", title);
             programm.AppendFormat(@"<date>{0}</date>", date.ToString("yyyyMMdd"));
             programm.AppendFormat(@"<rating system=""RU""><value>{0}</value></rating>", rating);
@@ -165,7 +188,7 @@ namespace ExcelToXML
             tm = tm * 24;
             int hour = (int)Math.Truncate(tm);
 
-            tm = (tm - hour)*60;
+            tm = (tm - hour) * 60;
             int minut = (int)Math.Truncate(tm);
 
             tm = (tm - minut) * 60;
